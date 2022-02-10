@@ -18,7 +18,10 @@ public class MissleLogic : MonoBehaviour
     {
         //Destroy this missle object if nothing happens after 3 seconds.
         Destroy(this.gameObject, 3f);
+    }
 
+    private void FixedUpdate()
+    {
         //store the velocity of the old velocity before the reflection.
         oldVelocity = GetComponent<Rigidbody>().velocity;
     }

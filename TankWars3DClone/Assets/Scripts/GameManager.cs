@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
 
     // Start is called before the first frame update
     private void Start()
@@ -52,8 +51,7 @@ public class GameManager : MonoBehaviour
     }
 
     //Implement a simple pause when they press escape on the keyboard.
-    
-    
+
 
     private void RestartLevel()
     {
@@ -80,7 +78,7 @@ public class GameManager : MonoBehaviour
             {
                 //this is where i would display the ui for the player tank being dead and to restart, probably the same ui for both but change text depending on the scenario.
                 Debug.Log("Sorry but the player has died!");
-            }    
+            }
         }
     }
 

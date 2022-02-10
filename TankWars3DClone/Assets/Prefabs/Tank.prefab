@@ -211,13 +211,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2899505064361702513}
-  m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalRotation: {x: 0.08715578, y: -0, z: -0, w: 0.9961947}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8844246790464284977}
-  m_Father: {fileID: 2899505064361994645}
-  m_RootOrder: 3
+  m_Father: {fileID: 2899505064361994649}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!33 &2899505064358603211
 MeshFilter:
@@ -301,9 +301,8 @@ Transform:
   - {fileID: 2899505064361994651}
   - {fileID: 2899505064361994653}
   - {fileID: 2899505064361994655}
-  - {fileID: 2899505064361994641}
   m_Father: {fileID: 2899505064361994649}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &130122583
 BoxCollider:
@@ -360,6 +359,7 @@ Transform:
   m_LocalPosition: {x: -18.882, y: 0.128, z: 0.99358296}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2899505064361994641}
   - {fileID: 2899505064361994645}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -375,10 +375,10 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 4
+  m_Constraints: 36
   m_CollisionDetection: 1
 --- !u!114 &2899505064361603863
 MonoBehaviour:
@@ -392,17 +392,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9874d2970af9c56419ed20e745d1b531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TankSpeed: 5
+  tankRenders: {fileID: 0}
+  TankSpeed: 4
   TankHealth: 3
   tankExplosionEffect: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
-  TankTurretRotationSpeed: 100
+  TankTurretRotationSpeed: 120
   turnTurretLeft: 113
   turnTurretRight: 101
   tanksRigidBody: {fileID: 2899505064361603862}
-  MaxFrontAndBackRayCastDistance: 1.55
-  MaxLeftAndRightRaycastDistance: 2
-  rayCastFrontAndBackOffset: 1
-  rayCastLeftAndRightOffset: 1.4
+  rayCastMaxDistance: 1.6
+  raycastOffset: 1.4
   KeyToShoot: 32
   turretObject: {fileID: 2899505064361702513}
   rateOfFire: 0
