@@ -1,0 +1,180 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5191670709060756609
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 34980749, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 34980751, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 2008704220, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2008704222, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064359701249, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: de908d7e858960b449d8aa7037d3591c, type: 2}
+    - target: {fileID: 2899505064359701257, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: de908d7e858960b449d8aa7037d3591c, type: 2}
+    - target: {fileID: 2899505064359701257, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0159ab93cb5a68448bdb368cb9da8a7c, type: 2}
+    - target: {fileID: 2899505064359701259, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: de908d7e858960b449d8aa7037d3591c, type: 2}
+    - target: {fileID: 2899505064359701263, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: de908d7e858960b449d8aa7037d3591c, type: 2}
+    - target: {fileID: 2899505064361702513, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702517, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702521, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Name
+      value: EnemyTank
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702521, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702521, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702523, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702525, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361702527, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.882
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.128
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.99358296
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3585585754115886970, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2899505064361603863, guid: e4e09839311106846bebf26988acacdd, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: e4e09839311106846bebf26988acacdd, type: 3}
+--- !u!1 &6931490071130689784 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2899505064361702521, guid: e4e09839311106846bebf26988acacdd, type: 3}
+  m_PrefabInstance: {fileID: 5191670709060756609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &6931490071130789783 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 2899505064361603862, guid: e4e09839311106846bebf26988acacdd, type: 3}
+  m_PrefabInstance: {fileID: 5191670709060756609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6931490071130689776 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2899505064361702513, guid: e4e09839311106846bebf26988acacdd, type: 3}
+  m_PrefabInstance: {fileID: 5191670709060756609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3652866352619638192 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8844246790464284977, guid: e4e09839311106846bebf26988acacdd, type: 3}
+  m_PrefabInstance: {fileID: 5191670709060756609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6931490071130689780 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2899505064361702517, guid: e4e09839311106846bebf26988acacdd, type: 3}
+  m_PrefabInstance: {fileID: 5191670709060756609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1414730095309728603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6931490071130689784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ce1e4db8634e7b8affcb3626df612d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 0}
+  tankRenders: {fileID: 6931490071130689780}
+  TankSpeed: 5
+  BulletSpeed: 40
+  TankHealth: 3
+  tankExplosionEffect: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
+  TankTurretRotationSpeed: 120
+  tanksRigidBody: {fileID: 6931490071130789783}
+  rayCastMaxDistance: 1.64
+  raycastOffset: 1.36
+  turretObject: {fileID: 6931490071130689776}
+  rateOfFire: 0
+  TankMissle: {fileID: 4039869506847297276, guid: c9c2d9b2f1d065a48b13163b23a2c447, type: 3}
+  MissleSpawnPoint: {fileID: 3652866352619638192}
+  VisualizeMovementRays: 1

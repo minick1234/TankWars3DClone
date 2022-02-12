@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -95,7 +93,6 @@ public class PlayerController : MonoBehaviour
             Destroy(explodeTankEffect, 3f);
         }
 
-        CheckForWalls();
         RotateTurret();
 
         //Technically this can be rewritten to use the logic for the velocity in fixedupdate as its using the physics system to apply a force to the object, but i also use the key input here
@@ -106,6 +103,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        CheckForWalls();
         MoveTank();
     }
 

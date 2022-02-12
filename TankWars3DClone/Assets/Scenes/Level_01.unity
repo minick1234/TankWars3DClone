@@ -1327,6 +1327,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533236511}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &565774300 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6931490071130689784, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+  m_PrefabInstance: {fileID: 7865432084449256591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &568512512
 GameObject:
   m_ObjectHideFlags: 0
@@ -3264,9 +3269,10 @@ MonoBehaviour:
   points: 0
   spawnZoneParent: {fileID: 1452672498}
   Player: {fileID: 2899505064361702521, guid: e4e09839311106846bebf26988acacdd, type: 3}
-  enemyAmount: 0
-  enemyTank: {fileID: 0}
-  EnemiesLeft: []
+  enemyAmount: 5
+  enemyTank: {fileID: 6931490071130689784, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+  EnemiesLeft:
+  - {fileID: 565774300}
   SpawnLanes: []
   restartKey: 114
 --- !u!4 &1024829849
@@ -7077,3 +7083,76 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsXLane: 0
+--- !u!1001 &7865432084449256591
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1414730095309728603, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: gm
+      value: 
+      objectReference: {fileID: 1024829848}
+    - target: {fileID: 1414730095309728603, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: raycastOffset
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414730095309728603, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: rayCastMaxDistance
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414730095309728603, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: RecheckMovementTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.882
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.128
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.99358296
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130656024, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931490071130689784, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}
+      propertyPath: m_Name
+      value: EnemyTank
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b0bd5d53cc2fe2a4f951a7a15bcfe6e4, type: 3}

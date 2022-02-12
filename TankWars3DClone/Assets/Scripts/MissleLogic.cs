@@ -39,11 +39,13 @@ public class MissleLogic : MonoBehaviour
             if (collision.gameObject.CompareTag("Player"))
             {
                 collision.gameObject.GetComponent<PlayerController>().DoDamage();
+            }else if (collision.gameObject.CompareTag("Enemy"))
+            {
+                collision.gameObject.GetComponent<EnemyTankController>().DoDamage();
             }
         }
         else
         {
-            print("Reflecting");
             //Reflect the bullet based on the original value of the velocity the bullet was moving, and the first collision contact point.
             //the normal is the vector at which angle technically we came from.
             Vector3 newReflectedVelocity = Vector3.Reflect(oldVelocity, collision.contacts[0].normal);

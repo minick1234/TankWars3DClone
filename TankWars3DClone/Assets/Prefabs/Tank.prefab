@@ -394,15 +394,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tankRenders: {fileID: 2899505064361702517}
   TankSpeed: 4
-  BulletSpeed: 30
+  BulletSpeed: 40
   TankHealth: 3
   tankExplosionEffect: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
-  TankTurretRotationSpeed: 120
+  TankTurretRotationSpeed: 150
   turnTurretLeft: 113
   turnTurretRight: 101
   tanksRigidBody: {fileID: 2899505064361603862}
-  rayCastMaxDistance: 1.63
-  raycastOffset: 1.37
+  rayCastMaxDistance: 1.7
+  raycastOffset: 1.3
   KeyToShoot: 32
   turretObject: {fileID: 2899505064361702513}
   rateOfFire: 0

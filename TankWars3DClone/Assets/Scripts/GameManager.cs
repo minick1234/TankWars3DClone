@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float points = 0.00f;
 
-
     [SerializeField] private GameObject spawnZoneParent;
     [SerializeField] private GameObject Player;
     [SerializeField] private int enemyAmount;
@@ -71,7 +70,6 @@ public class GameManager : MonoBehaviour
 
         if (Player.gameObject != null)
         {
-            Debug.Log("The player still exists.");
             if (Player.GetComponent<PlayerController>().getPlayerTankHealth() <= 0)
             {
                 //this is where i would display the ui for the player tank being dead and to restart, probably the same ui for both but change text depending on the scenario.
@@ -140,7 +138,6 @@ public class GameManager : MonoBehaviour
     {
         GameObject spawnedObject;
         int randomDirection = Random.Range(0, 2);
-        print(randomDirection);
         spawnedObject = Instantiate(gameObjectToSpawn, spawnPosition, Quaternion.identity);
 
         if (!SpawnLanes[randomSpawnLaneIndex].GetComponent<SpawnLane>().IsXLane)
