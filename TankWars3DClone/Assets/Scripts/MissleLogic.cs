@@ -8,6 +8,7 @@ public class MissleLogic : MonoBehaviour
 
 
     private RaycastHit hit;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -28,8 +29,21 @@ public class MissleLogic : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.layer == 8 || collision.gameObject.layer == 10)
         {
+            GameObject newExplosion = Instantiate(missleExplosion, this.transform.position, Quaternion.identity);
+            newExplosion.GetComponent<ParticleSystem>().Play();
+            Destroy(newExplosion, 3f);
+            Destroy(gameObject);
+
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.GetComponent<PlayerController>().DoDamage();
+            }
+        }
+        else
+        {
+            print("Reflecting");
             //Reflect the bullet based on the original value of the velocity the bullet was moving, and the first collision contact point.
             //the normal is the vector at which angle technically we came from.
             Vector3 newReflectedVelocity = Vector3.Reflect(oldVelocity, collision.contacts[0].normal);
@@ -42,18 +56,6 @@ public class MissleLogic : MonoBehaviour
             //With the new calculated reflectedrotation we do some weird quaternion math and multiply the old value to the new reflected value back to the rotation of this missle object.
             //so that it rotates in the correct direction
             this.transform.rotation = newReflectedRotation * this.transform.rotation;
-        }
-        else
-        {
-            GameObject newExplosion = Instantiate(missleExplosion, this.transform.position, Quaternion.identity);
-            newExplosion.GetComponent<ParticleSystem>().Play();
-            Destroy(newExplosion, 3f);
-            Destroy(gameObject);
-
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                collision.gameObject.GetComponent<PlayerController>().DoDamage();
-            }
         }
     }
 }

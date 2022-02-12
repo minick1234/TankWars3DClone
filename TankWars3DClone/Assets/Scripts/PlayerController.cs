@@ -17,10 +17,12 @@ public class PlayerController : MonoBehaviour
     [Header("General Tank Settings")]
     //The object render that will rotate. This is a seperate group of gameobjects just for the tank to rotate, this is done to avoid turning the turret when the tank rotates, so we maintain the same position and rotation on the turret.
     [SerializeField]
-    private GameObject tankRenders;
+    public GameObject tankRenders;
 
     //The speed at which the tank should move.
     [SerializeField] private float TankSpeed = 5f;
+
+    [SerializeField] private float BulletSpeed = 30f;
 
     //This is the tanks health, starts out as 3!
     [SerializeField] private int TankHealth;
@@ -46,7 +48,7 @@ public class PlayerController : MonoBehaviour
     //Reference to what key will enable the user to shoot with the tank!
     private KeyCode KeyToShoot;
 
-    [SerializeField] private GameObject turretObject;
+    [SerializeField] public GameObject turretObject;
 
 
     //RateOfFire - this needs to still be implemented.
@@ -404,7 +406,7 @@ public class PlayerController : MonoBehaviour
             GameObject missleObject = Instantiate(TankMissle,
                 MissleSpawnPoint.position + this.GetComponent<Rigidbody>().velocity, MissleSpawnPoint.rotation);
             missleObject.transform.Rotate(90, 0, 0);
-            missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * 20;
+            missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * BulletSpeed;
             missleObject.GetComponent<Rigidbody>().freezeRotation = true;
         }
     }
