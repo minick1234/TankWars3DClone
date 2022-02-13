@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tankRenders: {fileID: 2899505064361702517}
-  TankSpeed: 4
+  TankSpeed: 5
   BulletSpeed: 40
   TankHealth: 3
   tankExplosionEffect: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}

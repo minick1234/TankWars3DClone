@@ -163,7 +163,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2ce1e4db8634e7b8affcb3626df612d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xAxis: 0
+  zAxis: 0
   gm: {fileID: 0}
+  RecheckMovementTime: 0.1
+  RecheckCollisionTime: 0.75
   tankRenders: {fileID: 6931490071130689780}
   TankSpeed: 5
   BulletSpeed: 40

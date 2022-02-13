@@ -9,16 +9,19 @@ public class Teleporter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other);
         if (other.gameObject.layer == 7)
         {
             other.gameObject.transform.position = gm.GenerateNewPosition();
 
         }
-        else
+        else if(other.gameObject.layer == 8)
         {
             other.gameObject.transform.parent.position = gm.GenerateNewPosition();
         }
-        
+        else
+        {
+            print("Enemy cannot teleport.");
+        }
+
     }
 }

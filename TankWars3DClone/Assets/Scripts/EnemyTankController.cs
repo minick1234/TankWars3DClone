@@ -1,24 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyTankController : MonoBehaviour
 {
     //These are private variables for the sake of reference in the code. 
     //The xaxis and zaxis is used for the movement and the rotation of the turret, this is done to avoid 2 getaxis calls.
-    private float xAxis = 0, zAxis = 0;
 
-    //This bool checks for the movement along the x and z to be able to tell the turret to only rotate when one or the other is false.
-    //Hence in the movement i assign the movementx true and movementz false when im moving along the x so that the turret can only turn if i press the up and down keys instead of it turning consitently 
-    //while i move along the x.
-    private bool[] MovementXOrZ = {false, false};
-    private bool[] MovingDownOrLeft = {false, false};
+    public float xAxis = 0, zAxis = 0;
 
-    [SerializeField] private GameManager gm;
+    public GameManager gm;
     [SerializeField] private float RecheckMovementTime = 2f;
     private float lastRecheckTime = 0;
-    [SerializeField] private float CheckForSamePositionTimer = 2f;
-    private float lastPositionTimeCheck = 0;
-    private bool newMovementGenerated = false;
-
+    [SerializeField] private float RecheckCollisionTime = 2f;
+    private float lastLocationTime;
+    private Vector3 lastPosition;
 
     [Header("General Tank Settings")]
     //The object render that will rotate. This is a seperate group of gameobjects just for the tank to rotate, this is done to avoid turning the turret when the tank rotates, so we maintain the same position and rotation on the turret.
@@ -72,31 +68,21 @@ public class EnemyTankController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        print("i am here.");
-        if ((this.tankRenders.transform.eulerAngles.y == 0 || this.tankRenders.transform.eulerAngles.y == 180))
+        if (WallCheck[0] && xAxis == -1)
         {
-            int randDirection = Random.Range(0, 2);
-
-            if (randDirection == 0)
-            {
-                zAxis = -1;
-            }
-            else if (randDirection == 1)
-            {
-                zAxis = 1;
-            }
+            xAxis = 1;
         }
-        else if ((this.tankRenders.transform.eulerAngles.y == 90 || this.tankRenders.transform.eulerAngles.y == -90))
+        else if (WallCheck[1] && zAxis == 1)
         {
-            int randDirection = Random.Range(0, 2);
-            if (randDirection == 0)
-            {
-                xAxis = 1;
-            }
-            else if (randDirection == 1)
-            {
-                xAxis = -1;
-            }
+            zAxis = -1;
+        }
+        else if (WallCheck[2] && xAxis == 1)
+        {
+            xAxis = -1;
+        }
+        else if (WallCheck[3] && zAxis == -1)
+        {
+            zAxis = 1;
         }
     }
 
@@ -105,49 +91,54 @@ public class EnemyTankController : MonoBehaviour
         if (TankHealth <= 0)
         {
             gm.KillEnemy(this.gameObject);
-            Destroy(this.gameObject);
             GameObject explodeTankEffect = Instantiate(tankExplosionEffect, this.gameObject.transform.position,
                 Quaternion.identity);
             explodeTankEffect.GetComponent<ParticleSystem>().Play();
+            Destroy(this.gameObject);
             Destroy(explodeTankEffect, 3f);
         }
+
+        CheckForWalls();
     }
 
     private void FixedUpdate()
     {
-        CheckForWalls();
         MoveTank();
     }
 
     private void MoveTank()
     {
-        print("x axis " + xAxis);
-        print("z axis " + zAxis);
+        Vector3 newXAxisVector = new Vector3(xAxis * TankSpeed * Time.deltaTime, 0, 0);
+        Vector3 newZAxisVector = new Vector3(0, 0, zAxis * TankSpeed * Time.deltaTime);
+
 
         //similar to the movement for the player but the tank here generates its movement values then  applies that to here.
         //it will keep doing the movement checks and only after a few seconds.
-        if ((Time.time - lastRecheckTime) > RecheckMovementTime)
+        lastRecheckTime += Time.deltaTime;
+        if (lastRecheckTime < RecheckMovementTime)
         {
-            lastRecheckTime = Time.time;
+            //LITERALLY DO NOTHING.
         }
-
-        if (!newMovementGenerated)
+        else
         {
+            lastRecheckTime = 0;
             GenerateRandomDirection();
         }
-
-        Vector3 newXAxisVector;
-        Vector3 newZAxisVector;
 
         tanksRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
                                      RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY |
                                      RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+
         //movement right
         if (xAxis > 0)
         {
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
+            if (WallCheck[2])
+            {
+                xAxis = 0;
+            }
 
-            newXAxisVector = new Vector3(xAxis * TankSpeed * Time.deltaTime, 0, 0);
+            tanksRigidBody.constraints = RigidbodyConstraints.None;
             tanksRigidBody.position += newXAxisVector;
 
             tankRenders.transform.rotation = Quaternion.Euler(0, 90, 0);
@@ -155,18 +146,17 @@ public class EnemyTankController : MonoBehaviour
                 RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
                 RigidbodyConstraints.FreezeRotationY |
                 RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            MovementXOrZ[0] = true;
-            MovementXOrZ[1] = false;
-            MovingDownOrLeft[0] = false;
-            MovingDownOrLeft[1] = false;
         }
 
         //movement left
         else if (xAxis < 0)
         {
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
+            if (WallCheck[0])
+            {
+                xAxis = 0;
+            }
 
-            newXAxisVector = new Vector3(xAxis * TankSpeed * Time.deltaTime, 0, 0);
+            tanksRigidBody.constraints = RigidbodyConstraints.None;
             tanksRigidBody.position += newXAxisVector;
 
             tankRenders.transform.rotation = Quaternion.Euler(0, -90, 0);
@@ -174,18 +164,17 @@ public class EnemyTankController : MonoBehaviour
                 RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
                 RigidbodyConstraints.FreezeRotationY |
                 RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            MovementXOrZ[0] = true;
-            MovementXOrZ[1] = false;
-            MovingDownOrLeft[0] = false;
-            MovingDownOrLeft[1] = true;
         }
 
         //movement up
         else if (zAxis > 0)
         {
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
+            if (WallCheck[1])
+            {
+                zAxis = 0;
+            }
 
-            newZAxisVector = new Vector3(0, 0, zAxis * TankSpeed * Time.deltaTime);
+            tanksRigidBody.constraints = RigidbodyConstraints.None;
             tanksRigidBody.position += newZAxisVector;
 
             tankRenders.transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -193,18 +182,17 @@ public class EnemyTankController : MonoBehaviour
                 RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX |
                 RigidbodyConstraints.FreezeRotationY |
                 RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            MovementXOrZ[0] = false;
-            MovementXOrZ[1] = true;
-            MovingDownOrLeft[0] = false;
-            MovingDownOrLeft[1] = false;
         }
 
         //movement down
         else if (zAxis < 0)
         {
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
+            if (WallCheck[3])
+            {
+                zAxis = 0;
+            }
 
-            newZAxisVector = new Vector3(0, 0, zAxis * TankSpeed * Time.deltaTime);
+            tanksRigidBody.constraints = RigidbodyConstraints.None;
             tanksRigidBody.position += newZAxisVector;
 
             tankRenders.transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -212,13 +200,7 @@ public class EnemyTankController : MonoBehaviour
                 RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX |
                 RigidbodyConstraints.FreezeRotationY |
                 RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            MovementXOrZ[0] = false;
-            MovementXOrZ[1] = true;
-            MovingDownOrLeft[0] = true;
-            MovingDownOrLeft[1] = false;
         }
-
-        newMovementGenerated = false;
     }
 
     private void PlayerCheck()
@@ -241,219 +223,221 @@ public class EnemyTankController : MonoBehaviour
             }
         }
 
-        // if (WallCheck[0] && WallCheck[2])
-        // {
-        //     print("going to continue in direction");
-        //     zAxis = zAxis;
-        // }
-        // else if (WallCheck[1] && WallCheck[3])
-        // {
-        //     xAxis = xAxis;
-        // }
-
-
-        //Left wall and top wall
-        if (WallCheck[0] && WallCheck[1])
+        if (wallCheckCount == 3)
         {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                print("Moving right");
-                xAxis = 1;
-                zAxis = 0;
-            }
-            else if (randomMovement == 1)
-            {
-                print("Moving down");
-                zAxis = -1;
-                xAxis = 0;
-            }
+            print("doing a 3 way move.");
 
-            print("Available movement right and bottom");
-        }
-        //left wall and bottom wall
-        else if (WallCheck[0] && WallCheck[3])
-        {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                xAxis = 1;
-                zAxis = 0;
-                print("Moving right");
-            }
-            else if (randomMovement == 1)
-            {
-                zAxis = 1;
-                xAxis = 0;
-                print("Moving up");
-            }
-
-            print("Available movement on right and up");
-        }
-        //right wall and top wall
-        else if (WallCheck[2] && WallCheck[1])
-        {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                xAxis = -1;
-                zAxis = 0;
-                print("Moving left");
-            }
-            else if (randomMovement == 1)
-            {
-                zAxis = -1;
-                xAxis = 0;
-                print("Moving down");
-            }
-
-            print("Available left and down move.");
-        }
-        //right wall and bottom wall
-        else if (WallCheck[2] && WallCheck[3])
-        {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                print("Moving left");
-                zAxis = 0;
-                xAxis = -1;
-            }
-            else if (randomMovement == 1)
-            {
-                print("Moving up");
-                xAxis = 0;
-                zAxis = 1;
-            }
-
-            print("Available left and up move.");
-        }
-        //if 3 walls are false allowing for 3 places available for movement.
-        else if (wallCheckCount == 3)
-        {
             int randomDirection = Random.Range(0, 3);
+
             if (WallCheck[0])
             {
                 if (randomDirection == 0)
                 {
-                    print("Moving down");
-                    zAxis = -1;
-                    xAxis = 0;
+                    xAxis = 1;
                 }
                 else if (randomDirection == 1)
                 {
-                    print("Moving up");
-                    zAxis = 1;
-                    xAxis = 0;
+                    zAxis = -1;
                 }
                 else if (randomDirection == 2)
                 {
-                    print("Moving right");
-                    xAxis = 1;
-                    zAxis = 0;
+                    zAxis = 1;
                 }
             }
             else if (WallCheck[1])
             {
                 if (randomDirection == 0)
                 {
-                    print("Moving down");
-                    zAxis = -1;
-                    xAxis = 0;
+                    xAxis = 1;
                 }
                 else if (randomDirection == 1)
                 {
-                    print("Moving right");
-                    xAxis = 1;
-                    zAxis = 0;
+                    xAxis = -1;
                 }
                 else if (randomDirection == 2)
                 {
-                    print("Moving left");
-                    xAxis = -1;
-                    zAxis = 0;
+                    zAxis = -1;
                 }
             }
             else if (WallCheck[2])
             {
                 if (randomDirection == 0)
                 {
-                    print("Moving left");
-                    xAxis = -1;
-                    zAxis = 0;
+                    zAxis = 1;
                 }
                 else if (randomDirection == 1)
                 {
-                    print("Moving up");
-                    zAxis = 1;
-                    zAxis = 0;
+                    xAxis = -1;
                 }
                 else if (randomDirection == 2)
                 {
-                    print("Moving down");
                     zAxis = -1;
-                    xAxis = 0;
                 }
             }
             else if (WallCheck[3])
             {
                 if (randomDirection == 0)
                 {
-                    print("Moving up");
-                    zAxis = 1;
-                    xAxis = 0;
+                    xAxis = 1;
                 }
                 else if (randomDirection == 1)
                 {
-                    print("Moving right");
-                    xAxis = 1;
-                    zAxis = 0;
+                    xAxis = -1;
                 }
                 else if (randomDirection == 2)
                 {
-                    print("Moving left");
-                    xAxis = -1;
-                    zAxis = 0;
+                    zAxis = 1;
                 }
             }
-
-            print("Available movement on 3 sides");
         }
-        //if all the walls are false available for movmenet of all sides.
+        else if (wallCheckCount == 2)
+        {
+            print("doing a 2 way move.");
+            
+            int randomDirection = Random.Range(0, 2);
+            if (this.tankRenders.transform.eulerAngles.y == 90)
+            {
+                if (randomDirection == 0)
+                {
+                    if (WallCheck[1] && !WallCheck[3])
+                    {
+                        zAxis = -1;
+                        return;
+                    }
+                    else if (WallCheck[3] && !WallCheck[1])
+                    {
+                        zAxis = 1;
+                        return;
+                    }
+                }
+
+                xAxis = 1;
+            }
+            else if (this.tankRenders.transform.eulerAngles.y == 270)
+            {
+                if (randomDirection == 0)
+                {
+                    if (WallCheck[1] && !WallCheck[3])
+                    {
+                        zAxis = -1;
+                        return;
+                    }
+                    else if (WallCheck[3] && !WallCheck[1])
+                    {
+                        zAxis = 1;
+                        return;
+                    }
+                }
+
+                xAxis = -1;
+            }
+            else if (this.tankRenders.transform.eulerAngles.y >= 0 && this.tankRenders.transform.eulerAngles.y < 10 || this.tankRenders.transform.eulerAngles.y > -10 && this.tankRenders.transform.eulerAngles.y <= 0)
+            {
+                if (randomDirection == 0)
+                {
+                    if (WallCheck[0] && !WallCheck[2])
+                    {
+                        xAxis = 1;
+                        return;
+                    }
+                    else if (WallCheck[2] && !WallCheck[0])
+                    {
+                        xAxis = -1;
+                        return;
+                    }
+                }
+
+                zAxis = 1;
+            }
+            else if (this.tankRenders.transform.eulerAngles.y == 180)
+            {
+                if (randomDirection == 0)
+                {
+                    if (WallCheck[0] && !WallCheck[2])
+                    {
+                        xAxis = 1;
+                        return;
+                    }
+                    else if (WallCheck[2] && !WallCheck[0])
+                    {
+                        xAxis = -1;
+                        return;
+                    }
+                }
+
+                zAxis = -1;
+            }
+
+            if (WallCheck[0] && WallCheck[1] && !WallCheck[3] && !WallCheck[2])
+            {
+                int randomMovement = Random.Range(0, 2);
+                if (randomMovement == 0)
+                {
+                    xAxis = 1;
+                }
+                else if (randomMovement == 1)
+                {
+                    zAxis = -1;
+                }
+            }
+            else if (WallCheck[0] && WallCheck[3] && !WallCheck[2] && !WallCheck[1])
+            {
+                int randomMovement = Random.Range(0, 2);
+                if (randomMovement == 0)
+                {
+                    xAxis = 1;
+                }
+                else if (randomMovement == 1)
+                {
+                    zAxis = 1;
+                }
+            }
+            else if (WallCheck[2] && WallCheck[1] && !WallCheck[0] && !WallCheck[3])
+            {
+                int randomMovement = Random.Range(0, 2);
+                if (randomMovement == 0)
+                {
+                    xAxis = -1;
+                }
+                else if (randomMovement == 1)
+                {
+                    zAxis = -1;
+                }
+            }
+            else if (WallCheck[2] && WallCheck[3] && !WallCheck[0] && !WallCheck[1])
+            {
+                int randomMovement = Random.Range(0, 2);
+                if (randomMovement == 0)
+                {
+                    xAxis = -1;
+                }
+                else if (randomMovement == 1)
+                {
+                    zAxis = 1;
+                }
+            }
+        }
         else if (wallCheckCount == 4)
         {
+            print("doing a 4 way move.");
             int randomDirection = Random.Range(0, 4);
             if (randomDirection == 0)
             {
-                print("Moving up");
                 xAxis = -1;
-                zAxis = 0;
             }
             else if (randomDirection == 1)
             {
-                print("Moving down");
                 zAxis = -1;
-                xAxis = 0;
             }
             else if (randomDirection == 2)
             {
-                print("Moving right");
                 xAxis = 1;
-                zAxis = 0;
             }
             else if (randomDirection == 3)
             {
-                print("Moving left");
-                xAxis = -1;
-                zAxis = 0;
+                zAxis = 1;
             }
-
-            print("Available movement on all sides");
         }
-        //if we are just moving in the same direction because none of the checks are true.
-
-
-        newMovementGenerated = true;
     }
 
 
@@ -464,27 +448,29 @@ public class EnemyTankController : MonoBehaviour
 
         //The reason i have a check for if we move left or down is to make sure we keep the rotation consistant with where we are facing, so that when i turn left or down, the controls dont swithc opposite.
         //This way keeps it so that it keeps turning right if we press d when facing down, instead of the opposite. Its just a small quality of life thing.
-        if (MovingDownOrLeft[0])
-        {
-            if ((xAxis > 0 || xAxis < 0) && !MovementXOrZ[0])
-                turretObject.transform.Rotate(Vector3.up, xAxis * -TankTurretRotationSpeed * Time.deltaTime,
-                    Space.World);
-        }
-        else if (MovingDownOrLeft[1])
-        {
-            if ((zAxis > 0 || zAxis < 0) && !MovementXOrZ[1])
-                turretObject.transform.Rotate(Vector3.up, zAxis * TankTurretRotationSpeed * Time.deltaTime,
-                    Space.World);
-        }
-        else
-        {
-            if ((xAxis > 0 || xAxis < 0) && !MovementXOrZ[0])
-                turretObject.transform.Rotate(Vector3.up, xAxis * TankTurretRotationSpeed * Time.deltaTime,
-                    Space.World);
-            else if ((zAxis > 0 || zAxis < 0) && !MovementXOrZ[1])
-                turretObject.transform.Rotate(Vector3.up, zAxis * -TankTurretRotationSpeed * Time.deltaTime,
-                    Space.World);
-        }
+
+
+        // if (MovingDownOrLeft[0])
+        // {
+        //     if ((xAxis > 0 || xAxis < 0) && !MovementXOrZ[0])
+        //         turretObject.transform.Rotate(Vector3.up, xAxis * -TankTurretRotationSpeed * Time.deltaTime,
+        //             Space.World);
+        // }
+        // else if (MovingDownOrLeft[1])
+        // {
+        //     if ((zAxis > 0 || zAxis < 0) && !MovementXOrZ[1])
+        //         turretObject.transform.Rotate(Vector3.up, zAxis * TankTurretRotationSpeed * Time.deltaTime,
+        //             Space.World);
+        // }
+        // else
+        // {
+        //     if ((xAxis > 0 || xAxis < 0) && !MovementXOrZ[0])
+        //         turretObject.transform.Rotate(Vector3.up, xAxis * TankTurretRotationSpeed * Time.deltaTime,
+        //             Space.World);
+        //     else if ((zAxis > 0 || zAxis < 0) && !MovementXOrZ[1])
+        //         turretObject.transform.Rotate(Vector3.up, zAxis * -TankTurretRotationSpeed * Time.deltaTime,
+        //             Space.World);
+        // }
     }
 
     private void CheckForWalls()
@@ -660,5 +646,43 @@ public class EnemyTankController : MonoBehaviour
         missleObject.transform.Rotate(90, 0, 0);
         missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * BulletSpeed;
         missleObject.GetComponent<Rigidbody>().freezeRotation = true;
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+    }
+
+    private void OnCollisionStay(Collision collisionInfo)
+    {
+        lastLocationTime += Time.deltaTime;
+        if (lastLocationTime < RecheckCollisionTime)
+        {
+            //LITERALLY DO NOTHING.
+        }
+        else
+        {
+            if (collisionInfo.gameObject.tag.Equals("Enemy"))
+            {
+                if (xAxis == 1)
+                {
+                    xAxis = -1;
+                }
+                else if (xAxis == -1)
+                {
+                    xAxis = 1;
+                }
+                else if (zAxis == 1)
+                {
+                    zAxis = -1;
+                }
+                else if (zAxis == -1)
+                {
+                    zAxis = 1;
+                }
+            }
+
+            lastLocationTime = 0;
+        }
     }
 }

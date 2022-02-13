@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(restartKey))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            Debug.Log("The scene has been reloaded.");
         }
     }
 
@@ -88,6 +87,12 @@ public class GameManager : MonoBehaviour
     //spawn the enemies at the spawn points and then add them to the enemies list in order to keep track of the amount of enemies on the scene.
     private void SpawnEnemies()
     {
+        Vector3 spawn;
+        for (int i = 0; i < enemyAmount; i++)
+        {
+            spawn = GenerateNewPosition();
+            EnemiesLeft.Add(spawnObject(enemyTank, spawn));
+        }
     }
 
     private bool CheckValidLocation(Vector3 positionOfObject)
@@ -134,62 +139,129 @@ public class GameManager : MonoBehaviour
         return Spawn;
     }
 
-    private void spawnObject(GameObject gameObjectToSpawn, Vector3 spawnPosition)
+    private GameObject spawnObject(GameObject gameObjectToSpawn, Vector3 spawnPosition)
     {
         GameObject spawnedObject;
         int randomDirection = Random.Range(0, 2);
         spawnedObject = Instantiate(gameObjectToSpawn, spawnPosition, Quaternion.identity);
 
-        if (!SpawnLanes[randomSpawnLaneIndex].GetComponent<SpawnLane>().IsXLane)
+        if (gameObjectToSpawn.gameObject.tag.Equals("Player"))
         {
-            if (randomDirection == 0)
+            if (!SpawnLanes[randomSpawnLaneIndex].GetComponent<SpawnLane>().IsXLane)
             {
-                spawnedObject.GetComponent<PlayerController>().tankRenders.transform
-                    .Rotate(0,
-                        0,
-                        0);
-                spawnedObject.GetComponent<PlayerController>().turretObject.transform
-                    .Rotate(0,
-                        0,
-                        0);
+                if (randomDirection == 0)
+                {
+                    spawnedObject.GetComponent<PlayerController>().tankRenders.transform
+                        .Rotate(0,
+                            0,
+                            0);
+                    spawnedObject.GetComponent<PlayerController>().turretObject.transform
+                        .Rotate(0,
+                            0,
+                            0);
+                }
+                else if (randomDirection == 1)
+                {
+                    spawnedObject.GetComponent<PlayerController>().tankRenders.transform
+                        .Rotate(0,
+                            180,
+                            0);
+                    spawnedObject.GetComponent<PlayerController>().turretObject.transform
+                        .Rotate(0,
+                            180,
+                            0);
+                }
             }
-            else if (randomDirection == 1)
+            else
             {
-                spawnedObject.GetComponent<PlayerController>().tankRenders.transform
-                    .Rotate(0,
-                        180,
-                        0);
-                spawnedObject.GetComponent<PlayerController>().turretObject.transform
-                    .Rotate(0,
-                        180,
-                        0);
+                if (randomDirection == 0)
+                {
+                    spawnedObject.GetComponent<PlayerController>().tankRenders.transform
+                        .Rotate(0,
+                            SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                    spawnedObject.GetComponent<PlayerController>().turretObject.transform
+                        .Rotate(0,
+                            SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                }
+                else if (randomDirection == 1)
+                {
+                    spawnedObject.GetComponent<PlayerController>().tankRenders.transform
+                        .Rotate(0,
+                            -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                    spawnedObject.GetComponent<PlayerController>().turretObject.transform
+                        .Rotate(0,
+                            -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                }
             }
         }
-        else
+        else if (gameObjectToSpawn.gameObject.tag.Equals("Enemy"))
         {
-            if (randomDirection == 0)
+            spawnedObject.GetComponent<EnemyTankController>().gm = this;
+            int Startx = 0, Startz = 0;
+            if (!SpawnLanes[randomSpawnLaneIndex].GetComponent<SpawnLane>().IsXLane)
             {
-                spawnedObject.GetComponent<PlayerController>().tankRenders.transform
-                    .Rotate(0,
-                        SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
-                        0);
-                spawnedObject.GetComponent<PlayerController>().turretObject.transform
-                    .Rotate(0,
-                        SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
-                        0);
+                if (randomDirection == 0)
+                {
+                    spawnedObject.GetComponent<EnemyTankController>().tankRenders.transform
+                        .Rotate(0,
+                            0,
+                            0);
+                    spawnedObject.GetComponent<EnemyTankController>().turretObject.transform
+                        .Rotate(0,
+                            0,
+                            0);
+                    Startz = 1;
+                }
+                else if (randomDirection == 1)
+                {
+                    spawnedObject.GetComponent<EnemyTankController>().tankRenders.transform
+                        .Rotate(0,
+                            180,
+                            0);
+                    spawnedObject.GetComponent<EnemyTankController>().turretObject.transform
+                        .Rotate(0,
+                            180,
+                            0);
+                    Startz = -1;
+
+                }
             }
-            else if (randomDirection == 1)
+            else
             {
-                spawnedObject.GetComponent<PlayerController>().tankRenders.transform
-                    .Rotate(0,
-                        -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
-                        0);
-                spawnedObject.GetComponent<PlayerController>().turretObject.transform
-                    .Rotate(0,
-                        -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
-                        0);
+                if (randomDirection == 0)
+                {
+                    spawnedObject.GetComponent<EnemyTankController>().tankRenders.transform
+                        .Rotate(0,
+                            SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                    spawnedObject.GetComponent<EnemyTankController>().turretObject.transform
+                        .Rotate(0,
+                            SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                    Startx = 1;
+                }
+                else if (randomDirection == 1)
+                {
+                    spawnedObject.GetComponent<EnemyTankController>().tankRenders.transform
+                        .Rotate(0,
+                            -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                    spawnedObject.GetComponent<EnemyTankController>().turretObject.transform
+                        .Rotate(0,
+                            -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
+                            0);
+                    Startx = -1;
+
+                }
             }
+            spawnedObject.GetComponent<EnemyTankController>().xAxis = Startx;
+            spawnedObject.GetComponent<EnemyTankController>().zAxis = Startz;
         }
+        return spawnedObject;
     }
 
     private void PopulateSpawnZones()
