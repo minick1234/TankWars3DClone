@@ -166,7 +166,7 @@ MonoBehaviour:
   xAxis: 0
   zAxis: 0
   gm: {fileID: 0}
-  RecheckMovementTime: 0.1
+  RecheckMovementTime: 0.07
   RecheckCollisionTime: 0.75
   tankRenders: {fileID: 6931490071130689780}
   TankSpeed: 5

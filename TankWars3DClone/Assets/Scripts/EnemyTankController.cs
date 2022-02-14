@@ -4,17 +4,16 @@ using Random = UnityEngine.Random;
 
 public class EnemyTankController : MonoBehaviour
 {
-    //These are private variables for the sake of reference in the code. 
-    //The xaxis and zaxis is used for the movement and the rotation of the turret, this is done to avoid 2 getaxis calls.
-
     public float xAxis = 0, zAxis = 0;
 
     public GameManager gm;
+    [Header("Ai Timer Settings")]
     [SerializeField] private float RecheckMovementTime = 2f;
     private float lastRecheckTime = 0;
     [SerializeField] private float RecheckCollisionTime = 2f;
     private float lastLocationTime;
-    private Vector3 lastPosition;
+    [SerializeField] private float RecheckSameLocationTime = 1f;
+    private float sameLocationRecheck = 0;
 
     [Header("General Tank Settings")]
     //The object render that will rotate. This is a seperate group of gameobjects just for the tank to rotate, this is done to avoid turning the turret when the tank rotates, so we maintain the same position and rotation on the turret.
@@ -125,6 +124,7 @@ public class EnemyTankController : MonoBehaviour
             GenerateRandomDirection();
         }
 
+
         tanksRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
                                      RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY |
                                      RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -223,197 +223,171 @@ public class EnemyTankController : MonoBehaviour
             }
         }
 
+        if (WallCheck[0] && WallCheck[1] && !WallCheck[3] && !WallCheck[2])
+        {
+            int randomMovement = Random.Range(0, 2);
+            if (randomMovement == 0)
+            {
+                xAxis = 1;
+                zAxis = 0;
+                return;
+            }
+
+            if (randomMovement == 1)
+            {
+                zAxis = -1;
+                xAxis = 0;
+                return;
+            }
+        }
+        else if (WallCheck[0] && WallCheck[3] && !WallCheck[2] && !WallCheck[1])
+        {
+            int randomMovement = Random.Range(0, 2);
+            if (randomMovement == 0)
+            {
+                zAxis = 0;
+                xAxis = 1;
+                return;
+            }
+
+            if (randomMovement == 1)
+            {
+                xAxis = 0;
+                zAxis = 1;
+                return;
+            }
+        }
+        else if (WallCheck[2] && WallCheck[1] && !WallCheck[0] && !WallCheck[3])
+        {
+            int randomMovement = Random.Range(0, 2);
+            if (randomMovement == 0)
+            {
+                zAxis = 0;
+                xAxis = -1;
+                return;
+            }
+
+            if (randomMovement == 1)
+            {
+                xAxis = 0;
+                zAxis = -1;
+                return;
+            }
+        }
+        else if (WallCheck[2] && WallCheck[3] && !WallCheck[0] && !WallCheck[1])
+        {
+            int randomMovement = Random.Range(0, 2);
+            if (randomMovement == 0)
+            {
+                zAxis = 0;
+                xAxis = -1;
+                return;
+            }
+
+            if (randomMovement == 1)
+            {
+                xAxis = 0;
+                zAxis = 1;
+                return;
+            }
+        }
+
         if (wallCheckCount == 3)
         {
             print("doing a 3 way move.");
 
             int randomDirection = Random.Range(0, 3);
-
-            if (WallCheck[0])
+            print(randomDirection);
+            if (WallCheck[0] && !WallCheck[3] && !WallCheck[1] && !WallCheck[2])
             {
                 if (randomDirection == 0)
                 {
+                    zAxis = 0;
                     xAxis = 1;
+                    return;
                 }
-                else if (randomDirection == 1)
+
+                if (randomDirection == 1)
                 {
+                    xAxis = 0;
                     zAxis = -1;
+                    return;
                 }
-                else if (randomDirection == 2)
+
+                if (randomDirection == 2)
                 {
+                    xAxis = 0;
                     zAxis = 1;
+                    return;
                 }
             }
-            else if (WallCheck[1])
+            else if (WallCheck[1] && !WallCheck[0] && !WallCheck[3] && !WallCheck[2])
             {
                 if (randomDirection == 0)
                 {
+                    zAxis = 0;
                     xAxis = 1;
+                    return;
                 }
-                else if (randomDirection == 1)
+
+                if (randomDirection == 1)
                 {
+                    zAxis = 0;
                     xAxis = -1;
+                    return;
                 }
-                else if (randomDirection == 2)
+
+                if (randomDirection == 2)
                 {
+                    xAxis = 0;
                     zAxis = -1;
+                    return;
                 }
             }
-            else if (WallCheck[2])
+            else if (WallCheck[2] && !WallCheck[0] && !WallCheck[1] && !WallCheck[3])
             {
                 if (randomDirection == 0)
                 {
+                    xAxis = 0;
                     zAxis = 1;
+                    return;
                 }
-                else if (randomDirection == 1)
+
+                if (randomDirection == 1)
                 {
+                    zAxis = 0;
                     xAxis = -1;
+                    return;
                 }
-                else if (randomDirection == 2)
+
+                if (randomDirection == 2)
                 {
+                    xAxis = 0;
                     zAxis = -1;
+                    return;
                 }
             }
-            else if (WallCheck[3])
+            else if (WallCheck[3] && !WallCheck[0] && !WallCheck[1] && !WallCheck[2])
             {
                 if (randomDirection == 0)
                 {
+                    zAxis = 0;
                     xAxis = 1;
+                    return;
                 }
-                else if (randomDirection == 1)
+
+                if (randomDirection == 1)
                 {
+                    zAxis = 0;
                     xAxis = -1;
+                    return;
                 }
-                else if (randomDirection == 2)
+
+                if (randomDirection == 2)
                 {
+                    xAxis = 0;
                     zAxis = 1;
-                }
-            }
-        }
-        else if (wallCheckCount == 2)
-        {
-            print("doing a 2 way move.");
-            
-            int randomDirection = Random.Range(0, 2);
-            if (this.tankRenders.transform.eulerAngles.y == 90)
-            {
-                if (randomDirection == 0)
-                {
-                    if (WallCheck[1] && !WallCheck[3])
-                    {
-                        zAxis = -1;
-                        return;
-                    }
-                    else if (WallCheck[3] && !WallCheck[1])
-                    {
-                        zAxis = 1;
-                        return;
-                    }
-                }
-
-                xAxis = 1;
-            }
-            else if (this.tankRenders.transform.eulerAngles.y == 270)
-            {
-                if (randomDirection == 0)
-                {
-                    if (WallCheck[1] && !WallCheck[3])
-                    {
-                        zAxis = -1;
-                        return;
-                    }
-                    else if (WallCheck[3] && !WallCheck[1])
-                    {
-                        zAxis = 1;
-                        return;
-                    }
-                }
-
-                xAxis = -1;
-            }
-            else if (this.tankRenders.transform.eulerAngles.y >= 0 && this.tankRenders.transform.eulerAngles.y < 10 || this.tankRenders.transform.eulerAngles.y > -10 && this.tankRenders.transform.eulerAngles.y <= 0)
-            {
-                if (randomDirection == 0)
-                {
-                    if (WallCheck[0] && !WallCheck[2])
-                    {
-                        xAxis = 1;
-                        return;
-                    }
-                    else if (WallCheck[2] && !WallCheck[0])
-                    {
-                        xAxis = -1;
-                        return;
-                    }
-                }
-
-                zAxis = 1;
-            }
-            else if (this.tankRenders.transform.eulerAngles.y == 180)
-            {
-                if (randomDirection == 0)
-                {
-                    if (WallCheck[0] && !WallCheck[2])
-                    {
-                        xAxis = 1;
-                        return;
-                    }
-                    else if (WallCheck[2] && !WallCheck[0])
-                    {
-                        xAxis = -1;
-                        return;
-                    }
-                }
-
-                zAxis = -1;
-            }
-
-            if (WallCheck[0] && WallCheck[1] && !WallCheck[3] && !WallCheck[2])
-            {
-                int randomMovement = Random.Range(0, 2);
-                if (randomMovement == 0)
-                {
-                    xAxis = 1;
-                }
-                else if (randomMovement == 1)
-                {
-                    zAxis = -1;
-                }
-            }
-            else if (WallCheck[0] && WallCheck[3] && !WallCheck[2] && !WallCheck[1])
-            {
-                int randomMovement = Random.Range(0, 2);
-                if (randomMovement == 0)
-                {
-                    xAxis = 1;
-                }
-                else if (randomMovement == 1)
-                {
-                    zAxis = 1;
-                }
-            }
-            else if (WallCheck[2] && WallCheck[1] && !WallCheck[0] && !WallCheck[3])
-            {
-                int randomMovement = Random.Range(0, 2);
-                if (randomMovement == 0)
-                {
-                    xAxis = -1;
-                }
-                else if (randomMovement == 1)
-                {
-                    zAxis = -1;
-                }
-            }
-            else if (WallCheck[2] && WallCheck[3] && !WallCheck[0] && !WallCheck[1])
-            {
-                int randomMovement = Random.Range(0, 2);
-                if (randomMovement == 0)
-                {
-                    xAxis = -1;
-                }
-                else if (randomMovement == 1)
-                {
-                    zAxis = 1;
+                    return;
                 }
             }
         }
@@ -423,19 +397,67 @@ public class EnemyTankController : MonoBehaviour
             int randomDirection = Random.Range(0, 4);
             if (randomDirection == 0)
             {
+                zAxis = 0;
                 xAxis = -1;
+                return;
             }
-            else if (randomDirection == 1)
+
+            if (randomDirection == 1)
             {
+                xAxis = 0;
                 zAxis = -1;
+                return;
             }
-            else if (randomDirection == 2)
+
+            if (randomDirection == 2)
             {
+                zAxis = 0;
                 xAxis = 1;
+                return;
             }
-            else if (randomDirection == 3)
+
+            if (randomDirection == 3)
             {
+                xAxis = 0;
                 zAxis = 1;
+                return;
+            }
+        }
+
+        //assuming they have been in the same location with the glitch setting both values to 0, check for a valid no wall and let them go in that direction.
+        sameLocationRecheck += Time.deltaTime;
+        if (sameLocationRecheck < RecheckSameLocationTime)
+        {
+            //LITERALLY DO NOTHING.
+        }
+        else
+        {
+            sameLocationRecheck = 0;
+            if (xAxis == 0 && zAxis == 0)
+            {
+                if (!WallCheck[0])
+                {
+                    xAxis = -1;
+                    return;
+                }
+
+                if (!WallCheck[2])
+                {
+                    xAxis = 1;
+                    return;
+                }
+
+                if (!WallCheck[1])
+                {
+                    zAxis = 1;
+                    return;
+                }
+
+                if (!WallCheck[3])
+                {
+                    zAxis = -1;
+                    return;
+                }
             }
         }
     }
