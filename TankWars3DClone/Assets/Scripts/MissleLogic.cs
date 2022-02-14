@@ -17,8 +17,8 @@ public class MissleLogic : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //Destroy this missle object if nothing happens after 3 seconds.
-        Destroy(this.gameObject, 2f);
+        //Destroy this missle object if nothing happens after 1 seconds.
+        Destroy(this.gameObject, 1f);
     }
 
     private void FixedUpdate()

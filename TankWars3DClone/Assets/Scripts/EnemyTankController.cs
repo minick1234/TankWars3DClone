@@ -1006,53 +1006,119 @@ public class EnemyTankController : MonoBehaviour
 
     private void PlayerCheck()
     {
-        //Tomorrow come up with a way to make them check while being aware of other enemies os that if they spot me but another enemy is in the way we dont shoot.
-        //my idea is cast 3 rays off each side and make sure they all are the player otherwise if one is an enemy we avoid the teamfire
-        //and if not we shoot the player.
-
         Vector3 tankPosition = this.gameObject.transform.position;
         RaycastHit hit;
         List<GameObject> itemsHit = new List<GameObject>();
-        bool[] somethingHit = new bool[4];
-        somethingHit[0] = Physics.Raycast(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f, -transform.right,
+        bool[] somethingHit1 = new bool[4];
+        bool[] somethingHit2 = new bool[4];
+        bool[] somethingHit3 = new bool[4];
+
+        somethingHit1[0] = Physics.Raycast(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f, -transform.right,
             out hit, 50,
             ~(1 << 11));
+        somethingHit2[0] = Physics.Raycast(
+            tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f + Vector3.back * 0.75f, -transform.right,
+            out hit, 50,
+            ~(1 << 11));
+        somethingHit3[0] = Physics.Raycast(
+            tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f + Vector3.forward * 0.75f, -transform.right,
+            out hit, 50,
+            ~(1 << 11));
+
+
         Debug.DrawRay(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f, -transform.right * 50,
             Color.red);
-        if (somethingHit[0])
+        Debug.DrawRay(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f + Vector3.forward * 0.75f,
+            -transform.right * 50,
+            Color.red);
+        Debug.DrawRay(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f + Vector3.back * 0.75f,
+            -transform.right * 50,
+            Color.red);
+
+        if (somethingHit1[0] && somethingHit2[0] && somethingHit3[0])
         {
             itemsHit.Add(hit.collider.gameObject);
         }
 
-        somethingHit[1] = Physics.Raycast(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f, transform.right,
+        somethingHit1[1] = Physics.Raycast(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f, transform.right,
             out hit, 50,
             ~(1 << 11));
+        somethingHit2[1] = Physics.Raycast(
+            tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f + Vector3.back * 0.75f, transform.right,
+            out hit, 50,
+            ~(1 << 11));
+        somethingHit3[1] = Physics.Raycast(
+            tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f + Vector3.forward * 0.75f, transform.right,
+            out hit, 50,
+            ~(1 << 11));
+
         Debug.DrawRay(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f,
             transform.right * 50,
             Color.green);
-        if (somethingHit[1])
+        Debug.DrawRay(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f + Vector3.forward * 0.75f,
+            transform.right * 50,
+            Color.green);
+        Debug.DrawRay(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f + Vector3.back * 0.75f,
+            transform.right * 50,
+            Color.green);
+
+        if (somethingHit1[1] && somethingHit2[1] && somethingHit3[1])
         {
             itemsHit.Add(hit.collider.gameObject);
         }
 
-        somethingHit[2] = Physics.Raycast(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f,
+        somethingHit1[2] = Physics.Raycast(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f,
             transform.forward, out hit,
             50,
             ~(1 << 11));
+        somethingHit2[2] = Physics.Raycast(
+            tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f + Vector3.left * 0.75f,
+            transform.forward, out hit,
+            50,
+            ~(1 << 11));
+        somethingHit3[2] = Physics.Raycast(
+            tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f + Vector3.right * 0.75f,
+            transform.forward, out hit,
+            50,
+            ~(1 << 11));
+
         Debug.DrawRay(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f,
             transform.forward * 50,
             Color.blue);
-        if (somethingHit[2])
+        Debug.DrawRay(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f + Vector3.right * 0.75f,
+            transform.forward * 50,
+            Color.blue);
+        Debug.DrawRay(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f + Vector3.left * 0.75f,
+            transform.forward * 50,
+            Color.blue);
+
+        if (somethingHit1[2] && somethingHit2[2] && somethingHit3[2])
         {
             itemsHit.Add(hit.collider.gameObject);
         }
 
-        somethingHit[3] = Physics.Raycast(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f, -transform.forward,
+        somethingHit1[3] = Physics.Raycast(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f, -transform.forward,
             out hit, 50,
             ~(1 << 11));
+        somethingHit2[3] = Physics.Raycast(
+            tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f + Vector3.left * 0.5f, -transform.forward,
+            out hit, 50,
+            ~(1 << 11));
+        somethingHit3[3] = Physics.Raycast(
+            tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f + Vector3.right * 0.5f, -transform.forward,
+            out hit, 50,
+            ~(1 << 11));
+
         Debug.DrawRay(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f, -transform.forward * 50,
             Color.magenta);
-        if (somethingHit[3])
+        Debug.DrawRay(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f + Vector3.right * 0.5f,
+            -transform.forward * 50,
+            Color.magenta);
+        Debug.DrawRay(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f + Vector3.left * 0.5f,
+            -transform.forward * 50,
+            Color.magenta);
+
+        if (somethingHit1[3] && somethingHit2[3] && somethingHit3[3])
         {
             itemsHit.Add(hit.collider.gameObject);
         }
@@ -1088,6 +1154,11 @@ public class EnemyTankController : MonoBehaviour
         else if (dotAim >= 0.01)
         {
             turretObject.transform.Rotate(Vector3.up, -TankTurretRotationSpeed * Time.deltaTime);
+            AimIsRightShootShot = false;
+        }
+        else if (dotAim == -1f)
+        {
+            turretObject.transform.Rotate(Vector3.up, TankTurretRotationSpeed * Time.deltaTime);
             AimIsRightShootShot = false;
         }
         else
