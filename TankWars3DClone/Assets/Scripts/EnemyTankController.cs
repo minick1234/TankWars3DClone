@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,13 +9,22 @@ public class EnemyTankController : MonoBehaviour
     public float xAxis = 0, zAxis = 0;
 
     public GameManager gm;
-    [Header("Ai Timer Settings")]
-    [SerializeField] private float RecheckMovementTime = 2f;
+
+    [Header("Ai Timer Settings")] [SerializeField]
+    private float RecheckMovementTime = 2f;
+
     private float lastRecheckTime = 0;
     [SerializeField] private float RecheckCollisionTime = 2f;
     private float lastLocationTime;
     [SerializeField] private float RecheckSameLocationTime = 1f;
     private float sameLocationRecheck = 0;
+
+    private bool PlayerFound = false;
+    private float lastShotFiredTime;
+
+    private bool AimIsRightShootShot = false;
+
+    private Vector3 lastPositionCheck;
 
     [Header("General Tank Settings")]
     //The object render that will rotate. This is a seperate group of gameobjects just for the tank to rotate, this is done to avoid turning the turret when the tank rotates, so we maintain the same position and rotation on the turret.
@@ -97,6 +108,7 @@ public class EnemyTankController : MonoBehaviour
             Destroy(explodeTankEffect, 3f);
         }
 
+        PlayerCheck();
         CheckForWalls();
     }
 
@@ -107,106 +119,138 @@ public class EnemyTankController : MonoBehaviour
 
     private void MoveTank()
     {
-        Vector3 newXAxisVector = new Vector3(xAxis * TankSpeed * Time.deltaTime, 0, 0);
-        Vector3 newZAxisVector = new Vector3(0, 0, zAxis * TankSpeed * Time.deltaTime);
-
-
-        //similar to the movement for the player but the tank here generates its movement values then  applies that to here.
-        //it will keep doing the movement checks and only after a few seconds.
-        lastRecheckTime += Time.deltaTime;
-        if (lastRecheckTime < RecheckMovementTime)
+        if (!PlayerFound)
         {
-            //LITERALLY DO NOTHING.
-        }
-        else
-        {
-            lastRecheckTime = 0;
-            GenerateRandomDirection();
-        }
+            Vector3 newXAxisVector = new Vector3(xAxis * TankSpeed * Time.deltaTime, 0, 0);
+            Vector3 newZAxisVector = new Vector3(0, 0, zAxis * TankSpeed * Time.deltaTime);
 
 
-        tanksRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
-                                     RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY |
-                                     RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            //similar to the movement for the player but the tank here generates its movement values then  applies that to here.
+            //it will keep doing the movement checks and only after a few seconds.
+            lastRecheckTime += Time.deltaTime;
 
-
-        //movement right
-        if (xAxis > 0)
-        {
-            if (WallCheck[2])
+            if (lastRecheckTime < RecheckMovementTime)
             {
-                xAxis = 0;
+                //LITERALLY DO NOTHING.
+            }
+            else
+            {
+                lastRecheckTime = 0;
+                GenerateRandomDirection();
             }
 
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
-            tanksRigidBody.position += newXAxisVector;
-
-            tankRenders.transform.rotation = Quaternion.Euler(0, 90, 0);
-            tanksRigidBody.constraints =
-                RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
-                RigidbodyConstraints.FreezeRotationY |
-                RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        }
-
-        //movement left
-        else if (xAxis < 0)
-        {
-            if (WallCheck[0])
+            //assuming they have been in the same location with the glitch setting both values to 0, check for a valid no wall and let them go in that direction.
+            if ((Time.time - sameLocationRecheck) > RecheckSameLocationTime)
             {
-                xAxis = 0;
+                if ((this.transform.position - lastPositionCheck).magnitude <= 0.25)
+                {
+                    print("I am stuck, moving reassigning movement.");
+                    if (!WallCheck[0])
+                    {
+                        xAxis = -1;
+                        zAxis = 0;
+                    }
+
+                    if (!WallCheck[2])
+                    {
+                        xAxis = 1;
+                        zAxis = 0;
+                    }
+
+                    if (!WallCheck[1])
+                    {
+                        zAxis = 1;
+                        xAxis = 0;
+                    }
+
+                    if (!WallCheck[3])
+                    {
+                        zAxis = -1;
+                        xAxis = 0;
+                    }
+                }
+
+                lastPositionCheck = this.transform.position;
+                sameLocationRecheck = Time.time;
             }
 
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
-            tanksRigidBody.position += newXAxisVector;
 
-            tankRenders.transform.rotation = Quaternion.Euler(0, -90, 0);
-            tanksRigidBody.constraints =
-                RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
-                RigidbodyConstraints.FreezeRotationY |
-                RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        }
+            tanksRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
+                                         RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY |
+                                         RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
-        //movement up
-        else if (zAxis > 0)
-        {
-            if (WallCheck[1])
+            //movement right
+            if (xAxis > 0)
             {
-                zAxis = 0;
+                if (WallCheck[2])
+                {
+                    xAxis = 0;
+                }
+
+                tanksRigidBody.constraints = RigidbodyConstraints.None;
+                tanksRigidBody.position += newXAxisVector;
+
+                tankRenders.transform.rotation = Quaternion.Euler(0, 90, 0);
+                tanksRigidBody.constraints =
+                    RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
+                    RigidbodyConstraints.FreezeRotationY |
+                    RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             }
 
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
-            tanksRigidBody.position += newZAxisVector;
-
-            tankRenders.transform.rotation = Quaternion.Euler(0, 0, 0);
-            tanksRigidBody.constraints =
-                RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX |
-                RigidbodyConstraints.FreezeRotationY |
-                RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        }
-
-        //movement down
-        else if (zAxis < 0)
-        {
-            if (WallCheck[3])
+            //movement left
+            else if (xAxis < 0)
             {
-                zAxis = 0;
+                if (WallCheck[0])
+                {
+                    xAxis = 0;
+                }
+
+                tanksRigidBody.constraints = RigidbodyConstraints.None;
+                tanksRigidBody.position += newXAxisVector;
+
+                tankRenders.transform.rotation = Quaternion.Euler(0, -90, 0);
+                tanksRigidBody.constraints =
+                    RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
+                    RigidbodyConstraints.FreezeRotationY |
+                    RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             }
 
-            tanksRigidBody.constraints = RigidbodyConstraints.None;
-            tanksRigidBody.position += newZAxisVector;
+            //movement up
+            else if (zAxis > 0)
+            {
+                if (WallCheck[1])
+                {
+                    zAxis = 0;
+                }
 
-            tankRenders.transform.rotation = Quaternion.Euler(0, 180, 0);
-            tanksRigidBody.constraints =
-                RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX |
-                RigidbodyConstraints.FreezeRotationY |
-                RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                tanksRigidBody.constraints = RigidbodyConstraints.None;
+                tanksRigidBody.position += newZAxisVector;
+
+                tankRenders.transform.rotation = Quaternion.Euler(0, 0, 0);
+                tanksRigidBody.constraints =
+                    RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX |
+                    RigidbodyConstraints.FreezeRotationY |
+                    RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            }
+
+            //movement down
+            else if (zAxis < 0)
+            {
+                if (WallCheck[3])
+                {
+                    zAxis = 0;
+                }
+
+                tanksRigidBody.constraints = RigidbodyConstraints.None;
+                tanksRigidBody.position += newZAxisVector;
+
+                tankRenders.transform.rotation = Quaternion.Euler(0, 180, 0);
+                tanksRigidBody.constraints =
+                    RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX |
+                    RigidbodyConstraints.FreezeRotationY |
+                    RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            }
         }
-    }
-
-    private void PlayerCheck()
-    {
-        //this has to shoot a ray from each of the sides of the tank for a long long distance, and checks to make sure the ray collides with the wall.
-        //if the ray is not colliding with a wall and hits the player first then we have engaged and seen the player and can make the necessary actions to shoot the player.
     }
 
     private void GenerateRandomDirection()
@@ -225,70 +269,150 @@ public class EnemyTankController : MonoBehaviour
 
         if (WallCheck[0] && WallCheck[1] && !WallCheck[3] && !WallCheck[2])
         {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                xAxis = 1;
-                zAxis = 0;
-                return;
-            }
+            int randomMovement = Random.Range(0, 100);
 
-            if (randomMovement == 1)
+            if (this.tankRenders.transform.eulerAngles.y == 270)
             {
-                zAxis = -1;
-                xAxis = 0;
-                return;
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    xAxis = 1;
+                    zAxis = 0;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    zAxis = -1;
+                    xAxis = 0;
+                    return;
+                }
+            }
+            else if (this.tankRenders.transform.eulerAngles.y <= 10 && this.tankRenders.transform.eulerAngles.y >= -10)
+            {
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    xAxis = 1;
+                    zAxis = 0;
+                    return;
+                }
+
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    zAxis = -1;
+                    xAxis = 0;
+                    return;
+                }
             }
         }
         else if (WallCheck[0] && WallCheck[3] && !WallCheck[2] && !WallCheck[1])
         {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                zAxis = 0;
-                xAxis = 1;
-                return;
-            }
+            int randomMovement = Random.Range(0, 100);
 
-            if (randomMovement == 1)
+            if (this.tankRenders.transform.eulerAngles.y == 180)
             {
-                xAxis = 0;
-                zAxis = 1;
-                return;
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    zAxis = 0;
+                    xAxis = 1;
+                    return;
+                }
+
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
+                    return;
+                }
+            }
+            else if (this.tankRenders.transform.eulerAngles.y == 270)
+            {
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    zAxis = 0;
+                    xAxis = 1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
+                    return;
+                }
             }
         }
         else if (WallCheck[2] && WallCheck[1] && !WallCheck[0] && !WallCheck[3])
         {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                zAxis = 0;
-                xAxis = -1;
-                return;
-            }
+            int randomMovement = Random.Range(0, 100);
 
-            if (randomMovement == 1)
+            if (this.tankRenders.transform.eulerAngles.y == 90)
             {
-                xAxis = 0;
-                zAxis = -1;
-                return;
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    xAxis = 0;
+                    zAxis = -1;
+                    return;
+                }
+            }
+            else if (this.tankRenders.transform.eulerAngles.y <= 10 && this.tankRenders.transform.eulerAngles.y >= -10)
+            {
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    xAxis = 0;
+                    zAxis = -1;
+                    return;
+                }
             }
         }
         else if (WallCheck[2] && WallCheck[3] && !WallCheck[0] && !WallCheck[1])
         {
-            int randomMovement = Random.Range(0, 2);
-            if (randomMovement == 0)
-            {
-                zAxis = 0;
-                xAxis = -1;
-                return;
-            }
+            int randomMovement = Random.Range(0, 100);
 
-            if (randomMovement == 1)
+            if (this.tankRenders.transform.eulerAngles.y == 90)
             {
-                xAxis = 0;
-                zAxis = 1;
-                return;
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
+                    return;
+                }
+            }
+            else if (this.tankRenders.transform.eulerAngles.y == 180)
+            {
+                if (randomMovement >= 30 && randomMovement <= 99)
+                {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
+                    return;
+                }
             }
         }
 
@@ -296,204 +420,427 @@ public class EnemyTankController : MonoBehaviour
         {
             print("doing a 3 way move.");
 
-            int randomDirection = Random.Range(0, 3);
-            print(randomDirection);
+            int randomMovement = Random.Range(0, 100);
             if (WallCheck[0] && !WallCheck[3] && !WallCheck[1] && !WallCheck[2])
             {
-                if (randomDirection == 0)
+                if (this.tankRenders.transform.eulerAngles.y == 270)
                 {
-                    zAxis = 0;
-                    xAxis = 1;
-                    return;
-                }
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
 
-                if (randomDirection == 1)
-                {
-                    xAxis = 0;
-                    zAxis = -1;
-                    return;
-                }
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
 
-                if (randomDirection == 2)
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y <= 10 &&
+                         this.tankRenders.transform.eulerAngles.y >= -10)
                 {
-                    xAxis = 0;
-                    zAxis = 1;
-                    return;
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y == 180)
+                {
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
                 }
             }
             else if (WallCheck[1] && !WallCheck[0] && !WallCheck[3] && !WallCheck[2])
             {
-                if (randomDirection == 0)
+                if (this.tankRenders.transform.eulerAngles.y == 270)
                 {
-                    zAxis = 0;
-                    xAxis = 1;
-                    return;
-                }
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
 
-                if (randomDirection == 1)
-                {
-                    zAxis = 0;
-                    xAxis = -1;
-                    return;
-                }
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
 
-                if (randomDirection == 2)
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y == 90)
                 {
-                    xAxis = 0;
-                    zAxis = -1;
-                    return;
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y <= 10 &&
+                         this.tankRenders.transform.eulerAngles.y >= -10)
+                {
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
                 }
             }
             else if (WallCheck[2] && !WallCheck[0] && !WallCheck[1] && !WallCheck[3])
             {
-                if (randomDirection == 0)
+                if (this.tankRenders.transform.eulerAngles.y == 90)
                 {
-                    xAxis = 0;
-                    zAxis = 1;
-                    return;
-                }
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
 
-                if (randomDirection == 1)
-                {
-                    zAxis = 0;
-                    xAxis = -1;
-                    return;
-                }
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
 
-                if (randomDirection == 2)
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y <= 10 &&
+                         this.tankRenders.transform.eulerAngles.y >= -10)
                 {
-                    xAxis = 0;
-                    zAxis = -1;
-                    return;
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y == 180)
+                {
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = -1;
+                        return;
+                    }
                 }
             }
             else if (WallCheck[3] && !WallCheck[0] && !WallCheck[1] && !WallCheck[2])
             {
-                if (randomDirection == 0)
+                if (this.tankRenders.transform.eulerAngles.y == 90)
                 {
-                    zAxis = 0;
-                    xAxis = 1;
-                    return;
-                }
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
 
-                if (randomDirection == 1)
-                {
-                    zAxis = 0;
-                    xAxis = -1;
-                    return;
-                }
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
 
-                if (randomDirection == 2)
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y == 180)
                 {
-                    xAxis = 0;
-                    zAxis = 1;
-                    return;
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
+                }
+                else if (this.tankRenders.transform.eulerAngles.y == 270)
+                {
+                    if (randomMovement >= 90 && randomMovement <= 99)
+                    {
+                        zAxis = 0;
+                        xAxis = 1;
+                        return;
+                    }
+
+                    if (randomMovement >= 0 && randomMovement <= 44)
+                    {
+                        zAxis = 0;
+                        xAxis = -1;
+                        return;
+                    }
+
+                    if (randomMovement >= 45 && randomMovement <= 89)
+                    {
+                        xAxis = 0;
+                        zAxis = 1;
+                        return;
+                    }
                 }
             }
         }
         else if (wallCheckCount == 4)
         {
             print("doing a 4 way move.");
-            int randomDirection = Random.Range(0, 4);
-            if (randomDirection == 0)
-            {
-                zAxis = 0;
-                xAxis = -1;
-                return;
-            }
+            int randomMovement = Random.Range(0, 100);
 
-            if (randomDirection == 1)
+            if (this.tankRenders.transform.eulerAngles.y == 90)
             {
-                xAxis = 0;
-                zAxis = -1;
-                return;
-            }
-
-            if (randomDirection == 2)
-            {
-                zAxis = 0;
-                xAxis = 1;
-                return;
-            }
-
-            if (randomDirection == 3)
-            {
-                xAxis = 0;
-                zAxis = 1;
-                return;
-            }
-        }
-
-        //assuming they have been in the same location with the glitch setting both values to 0, check for a valid no wall and let them go in that direction.
-        sameLocationRecheck += Time.deltaTime;
-        if (sameLocationRecheck < RecheckSameLocationTime)
-        {
-            //LITERALLY DO NOTHING.
-        }
-        else
-        {
-            sameLocationRecheck = 0;
-            if (xAxis == 0 && zAxis == 0)
-            {
-                if (!WallCheck[0])
+                if (randomMovement >= 90 && randomMovement <= 99)
                 {
+                    zAxis = 0;
                     xAxis = -1;
                     return;
                 }
 
-                if (!WallCheck[2])
+                if (randomMovement >= 0 && randomMovement <= 29)
                 {
+                    xAxis = 0;
+                    zAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 59)
+                {
+                    zAxis = 0;
                     xAxis = 1;
                     return;
                 }
 
-                if (!WallCheck[1])
+                if (randomMovement >= 60 && randomMovement <= 89)
                 {
+                    xAxis = 0;
                     zAxis = 1;
                     return;
                 }
-
-                if (!WallCheck[3])
+            }
+            else if (this.tankRenders.transform.eulerAngles.y == 270)
+            {
+                if (randomMovement >= 0 && randomMovement <= 29)
                 {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 59)
+                {
+                    xAxis = 0;
                     zAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 90 && randomMovement <= 99)
+                {
+                    zAxis = 0;
+                    xAxis = 1;
+                    return;
+                }
+
+                if (randomMovement >= 60 && randomMovement <= 89)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
+                    return;
+                }
+            }
+            else if (this.tankRenders.transform.eulerAngles.y <= 10 && this.tankRenders.transform.eulerAngles.y >= -10)
+            {
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 90 && randomMovement <= 99)
+                {
+                    xAxis = 0;
+                    zAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 59)
+                {
+                    zAxis = 0;
+                    xAxis = 1;
+                    return;
+                }
+
+                if (randomMovement >= 60 && randomMovement <= 89)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
+                    return;
+                }
+            }
+            else if (this.tankRenders.transform.eulerAngles.y == 180)
+            {
+                if (randomMovement >= 0 && randomMovement <= 29)
+                {
+                    zAxis = 0;
+                    xAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 30 && randomMovement <= 59)
+                {
+                    xAxis = 0;
+                    zAxis = -1;
+                    return;
+                }
+
+                if (randomMovement >= 60 && randomMovement <= 89)
+                {
+                    zAxis = 0;
+                    xAxis = 1;
+                    return;
+                }
+
+                if (randomMovement >= 90 && randomMovement <= 99)
+                {
+                    xAxis = 0;
+                    zAxis = 1;
                     return;
                 }
             }
         }
     }
 
-
-    private void RotateTurret()
-    {
-        //This now has to check if the player was spotted in one of the raycasts for the playerCheck method, and when we rotate the turret and its lined up with the player, we are able to call the shootMissle method in order to fire at the player.
-        //This whole method has to be rethought.
-
-        //The reason i have a check for if we move left or down is to make sure we keep the rotation consistant with where we are facing, so that when i turn left or down, the controls dont swithc opposite.
-        //This way keeps it so that it keeps turning right if we press d when facing down, instead of the opposite. Its just a small quality of life thing.
-
-
-        // if (MovingDownOrLeft[0])
-        // {
-        //     if ((xAxis > 0 || xAxis < 0) && !MovementXOrZ[0])
-        //         turretObject.transform.Rotate(Vector3.up, xAxis * -TankTurretRotationSpeed * Time.deltaTime,
-        //             Space.World);
-        // }
-        // else if (MovingDownOrLeft[1])
-        // {
-        //     if ((zAxis > 0 || zAxis < 0) && !MovementXOrZ[1])
-        //         turretObject.transform.Rotate(Vector3.up, zAxis * TankTurretRotationSpeed * Time.deltaTime,
-        //             Space.World);
-        // }
-        // else
-        // {
-        //     if ((xAxis > 0 || xAxis < 0) && !MovementXOrZ[0])
-        //         turretObject.transform.Rotate(Vector3.up, xAxis * TankTurretRotationSpeed * Time.deltaTime,
-        //             Space.World);
-        //     else if ((zAxis > 0 || zAxis < 0) && !MovementXOrZ[1])
-        //         turretObject.transform.Rotate(Vector3.up, zAxis * -TankTurretRotationSpeed * Time.deltaTime,
-        //             Space.World);
-        // }
-    }
 
     private void CheckForWalls()
     {
@@ -657,22 +1004,113 @@ public class EnemyTankController : MonoBehaviour
         TankHealth -= 1;
     }
 
-    private void ShootTankTurret()
+    private void PlayerCheck()
     {
-        //This will now be called from the enemy tanks playerchecker to make sure we first rotate the turret correctly, 
-        //then when the aim is in the the correct area, we call this to fire the turret.
+        //Tomorrow come up with a way to make them check while being aware of other enemies os that if they spot me but another enemy is in the way we dont shoot.
+        //my idea is cast 3 rays off each side and make sure they all are the player otherwise if one is an enemy we avoid the teamfire
+        //and if not we shoot the player.
 
+        Vector3 tankPosition = this.gameObject.transform.position;
+        RaycastHit hit;
+        List<GameObject> itemsHit = new List<GameObject>();
+        bool[] somethingHit = new bool[4];
+        somethingHit[0] = Physics.Raycast(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f, -transform.right,
+            out hit, 50,
+            ~(1 << 11));
+        Debug.DrawRay(tankPosition + Vector3.left * 0.9f + Vector3.up * 0.75f, -transform.right * 50,
+            Color.red);
+        if (somethingHit[0])
+        {
+            itemsHit.Add(hit.collider.gameObject);
+        }
 
-        GameObject missleObject = Instantiate(TankMissle,
-            MissleSpawnPoint.position + this.GetComponent<Rigidbody>().velocity, MissleSpawnPoint.rotation);
-        missleObject.transform.Rotate(90, 0, 0);
-        missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * BulletSpeed;
-        missleObject.GetComponent<Rigidbody>().freezeRotation = true;
+        somethingHit[1] = Physics.Raycast(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f, transform.right,
+            out hit, 50,
+            ~(1 << 11));
+        Debug.DrawRay(tankPosition + Vector3.right * 0.9f + Vector3.up * 0.75f,
+            transform.right * 50,
+            Color.green);
+        if (somethingHit[1])
+        {
+            itemsHit.Add(hit.collider.gameObject);
+        }
+
+        somethingHit[2] = Physics.Raycast(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f,
+            transform.forward, out hit,
+            50,
+            ~(1 << 11));
+        Debug.DrawRay(tankPosition + Vector3.forward * 0.9f + Vector3.up * 0.75f,
+            transform.forward * 50,
+            Color.blue);
+        if (somethingHit[2])
+        {
+            itemsHit.Add(hit.collider.gameObject);
+        }
+
+        somethingHit[3] = Physics.Raycast(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f, -transform.forward,
+            out hit, 50,
+            ~(1 << 11));
+        Debug.DrawRay(tankPosition + Vector3.back * 0.9f + Vector3.up * 0.75f, -transform.forward * 50,
+            Color.magenta);
+        if (somethingHit[3])
+        {
+            itemsHit.Add(hit.collider.gameObject);
+        }
+
+        foreach (var item in itemsHit)
+        {
+            if (item.layer == 8)
+            {
+                print("Player Spotted");
+                PlayerFound = true;
+                xAxis = 0;
+                zAxis = 0;
+                RotateTurret(item);
+            }
+            else if (item.layer == 9 || item.layer == 10 || item.layer == 6 || item.layer != 8)
+            {
+                print("No player Sighted");
+                PlayerFound = false;
+            }
+        }
+    }
+
+    private void RotateTurret(GameObject player)
+    {
+        Vector3 aim = this.turretObject.transform.position - player.transform.position;
+        aim.Normalize();
+        float dotAim = Vector3.Dot(this.turretObject.transform.right, aim);
+        if (dotAim <= -0.01)
+        {
+            turretObject.transform.Rotate(Vector3.up, TankTurretRotationSpeed * Time.deltaTime);
+            AimIsRightShootShot = false;
+        }
+        else if (dotAim >= 0.01)
+        {
+            turretObject.transform.Rotate(Vector3.up, -TankTurretRotationSpeed * Time.deltaTime);
+            AimIsRightShootShot = false;
+        }
+        else
+        {
+            ShootTankTurret();
+        }
     }
 
 
-    private void OnCollisionEnter(Collision collision)
+    private void ShootTankTurret()
     {
+        if ((Time.time - lastShotFiredTime) < rateOfFire)
+        {
+        }
+        else
+        {
+            lastShotFiredTime = Time.time;
+            GameObject missleObject = Instantiate(TankMissle,
+                MissleSpawnPoint.position + this.GetComponent<Rigidbody>().velocity, MissleSpawnPoint.rotation);
+            missleObject.transform.Rotate(90, 0, 0);
+            missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * BulletSpeed;
+            missleObject.GetComponent<Rigidbody>().freezeRotation = true;
+        }
     }
 
     private void OnCollisionStay(Collision collisionInfo)

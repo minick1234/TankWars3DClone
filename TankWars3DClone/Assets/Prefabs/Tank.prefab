@@ -77,7 +77,7 @@ Light:
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -93,6 +93,50 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &362895587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 362895588}
+  - component: {fileID: 362895589}
+  m_Layer: 8
+  m_Name: TurretCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &362895588
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362895587}
+  m_LocalRotation: {x: -0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2899505064361994641}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -10, y: 0, z: 0}
+--- !u!65 &362895589
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362895587}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.33, y: 0.75, z: 1.07}
+  m_Center: {x: 0, y: 0.5, z: -0.15}
 --- !u!1 &2008704220
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,7 +214,7 @@ Light:
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -216,6 +260,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8844246790464284977}
+  - {fileID: 362895588}
   m_Father: {fileID: 2899505064361994649}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
@@ -278,7 +323,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2899505064361994645}
-  - component: {fileID: 130122583}
   - component: {fileID: 130122584}
   m_Layer: 8
   m_Name: TankRenderers
@@ -304,19 +348,6 @@ Transform:
   m_Father: {fileID: 2899505064361994649}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &130122583
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2899505064361702517}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.1714954, y: 0.77416086, z: 1.1059433}
-  m_Center: {x: -0.059731483, y: 1.30708, z: 0.05297172}
 --- !u!65 &130122584
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -328,8 +359,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.657198, y: 1, z: 2.315499}
-  m_Center: {x: -0.017834663, y: 0.5, z: -0.00923717}
+  m_Size: {x: 1.657198, y: 1.2, z: 1.6}
+  m_Center: {x: -0.017834663, y: 0.55, z: -0.00923717}
 --- !u!1 &2899505064361702521
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,11 +424,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tankRenders: {fileID: 2899505064361702517}
-  TankSpeed: 5
-  BulletSpeed: 40
+  TankSpeed: 4
+  BulletSpeed: 50
   TankHealth: 3
   tankExplosionEffect: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
-  TankTurretRotationSpeed: 150
+  TankTurretRotationSpeed: 135
   turnTurretLeft: 113
   turnTurretRight: 101
   tanksRigidBody: {fileID: 2899505064361603862}
@@ -405,7 +436,7 @@ MonoBehaviour:
   raycastOffset: 1.3
   KeyToShoot: 32
   turretObject: {fileID: 2899505064361702513}
-  rateOfFire: 0
+  rateOfFire: 0.35
   TankMissle: {fileID: 4039869506847297276, guid: c9c2d9b2f1d065a48b13163b23a2c447, type: 3}
   MissleSpawnPoint: {fileID: 8844246790464284977}
   VisualizeMovementRays: 1
@@ -681,8 +712,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3585585754115886970}
-  m_LocalRotation: {x: -0.08715578, y: -0, z: -0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0.47900003, z: 1.0479999}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.442, z: 0.839}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2899505064361994641}

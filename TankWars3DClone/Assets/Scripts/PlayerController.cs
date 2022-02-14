@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private bool[] MovementXOrZ = {false, false};
     private bool[] MovingDownOrLeft = {false, false};
 
+    private float timeSinceLastFire;
+
     [Header("General Tank Settings")]
     //The object render that will rotate. This is a seperate group of gameobjects just for the tank to rotate, this is done to avoid turning the turret when the tank rotates, so we maintain the same position and rotation on the turret.
     [SerializeField]
@@ -401,11 +403,19 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyToShoot))
         {
-            GameObject missleObject = Instantiate(TankMissle,
-                MissleSpawnPoint.position + this.GetComponent<Rigidbody>().velocity, MissleSpawnPoint.rotation);
-            missleObject.transform.Rotate(90, 0, 0);
-            missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * BulletSpeed;
-            missleObject.GetComponent<Rigidbody>().freezeRotation = true;
+            if ((Time.time - timeSinceLastFire) < rateOfFire)
+            {
+                print("Cant fire yet!");
+            }
+            else
+            {
+                timeSinceLastFire = Time.time;
+                GameObject missleObject = Instantiate(TankMissle,
+                    MissleSpawnPoint.position + this.GetComponent<Rigidbody>().velocity, MissleSpawnPoint.rotation);
+                missleObject.transform.Rotate(80, 0, 0);
+                missleObject.GetComponent<Rigidbody>().velocity += MissleSpawnPoint.transform.forward * BulletSpeed;
+                missleObject.GetComponent<Rigidbody>().freezeRotation = true;
+            }
         }
     }
 }

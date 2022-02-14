@@ -18,7 +18,7 @@ public class MissleLogic : MonoBehaviour
     private void Update()
     {
         //Destroy this missle object if nothing happens after 3 seconds.
-        Destroy(this.gameObject, 3f);
+        Destroy(this.gameObject, 2f);
     }
 
     private void FixedUpdate()
@@ -39,7 +39,8 @@ public class MissleLogic : MonoBehaviour
             if (collision.gameObject.CompareTag("Player"))
             {
                 collision.gameObject.GetComponent<PlayerController>().DoDamage();
-            }else if (collision.gameObject.CompareTag("Enemy"))
+            }
+            else if (collision.gameObject.CompareTag("Enemy"))
             {
                 collision.gameObject.GetComponent<EnemyTankController>().DoDamage();
             }

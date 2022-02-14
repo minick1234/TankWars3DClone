@@ -229,28 +229,13 @@ GameObject:
   - component: {fileID: 82717661}
   - component: {fileID: 82717660}
   - component: {fileID: 82717659}
-  - component: {fileID: 82717658}
-  - component: {fileID: 82717662}
   m_Layer: 9
-  m_Name: MiddleTeleporter
+  m_Name: TeleporterDiamond
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &82717658
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82717657}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &82717659
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -308,25 +293,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82717657}
   m_LocalRotation: {x: 0.35355338, y: -0.1464466, z: 0.35355338, w: 0.8535535}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0.16}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1331542276}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 45}
---- !u!114 &82717662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82717657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7ae579a1844b54a971e5a6e9b1f02a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gm: {fileID: 1024829848}
 --- !u!1 &124440536
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +311,7 @@ GameObject:
   - component: {fileID: 124440540}
   - component: {fileID: 124440538}
   - component: {fileID: 124440541}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +378,7 @@ GameObject:
   - component: {fileID: 167908224}
   - component: {fileID: 167908222}
   - component: {fileID: 167908225}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -872,7 +844,7 @@ GameObject:
   - component: {fileID: 323822972}
   - component: {fileID: 323822970}
   - component: {fileID: 323822969}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (18)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1529,7 +1501,7 @@ GameObject:
   - component: {fileID: 603656769}
   - component: {fileID: 603656767}
   - component: {fileID: 603656770}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1596,7 +1568,7 @@ GameObject:
   - component: {fileID: 616437006}
   - component: {fileID: 616437004}
   - component: {fileID: 616437003}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (20)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2027,7 +1999,7 @@ GameObject:
   - component: {fileID: 789553835}
   - component: {fileID: 789553833}
   - component: {fileID: 789553836}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2094,7 +2066,7 @@ GameObject:
   - component: {fileID: 799136070}
   - component: {fileID: 799136068}
   - component: {fileID: 799136071}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2161,7 +2133,7 @@ GameObject:
   - component: {fileID: 815293956}
   - component: {fileID: 815293954}
   - component: {fileID: 815293957}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2228,7 +2200,7 @@ GameObject:
   - component: {fileID: 851249857}
   - component: {fileID: 851249855}
   - component: {fileID: 851249858}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2485,7 +2457,7 @@ GameObject:
   - component: {fileID: 906484299}
   - component: {fileID: 906484297}
   - component: {fileID: 906484296}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (23)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2892,7 +2864,7 @@ GameObject:
   - component: {fileID: 1012212918}
   - component: {fileID: 1012212916}
   - component: {fileID: 1012212915}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (17)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3105,7 +3077,7 @@ GameObject:
   - component: {fileID: 1139077321}
   - component: {fileID: 1139077319}
   - component: {fileID: 1139077322}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3172,7 +3144,7 @@ GameObject:
   - component: {fileID: 1183389233}
   - component: {fileID: 1183389231}
   - component: {fileID: 1183389230}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (21)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3239,7 +3211,7 @@ GameObject:
   - component: {fileID: 1202273904}
   - component: {fileID: 1202273902}
   - component: {fileID: 1202273901}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (22)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3401,7 +3373,7 @@ GameObject:
   - component: {fileID: 1245670456}
   - component: {fileID: 1245670454}
   - component: {fileID: 1245670457}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3468,7 +3440,7 @@ GameObject:
   - component: {fileID: 1288885361}
   - component: {fileID: 1288885359}
   - component: {fileID: 1288885358}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (16)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3604,6 +3576,65 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1330003140}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1331542275
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1331542276}
+  - component: {fileID: 1331542278}
+  - component: {fileID: 1331542277}
+  m_Layer: 9
+  m_Name: Teleporter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1331542276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331542275}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 82717661}
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1331542277
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331542275}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 3, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1331542278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331542275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf7ae579a1844b54a971e5a6e9b1f02a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 1024829848}
 --- !u!1 &1354987918
 GameObject:
   m_ObjectHideFlags: 0
@@ -3711,7 +3742,7 @@ GameObject:
   - component: {fileID: 1367065514}
   - component: {fileID: 1367065512}
   - component: {fileID: 1367065515}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3954,7 +3985,7 @@ GameObject:
   - component: {fileID: 1447337995}
   - component: {fileID: 1447337993}
   - component: {fileID: 1447337992}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (25)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4018,7 +4049,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1452672499}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLanes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4076,7 +4107,7 @@ GameObject:
   - component: {fileID: 1506437648}
   - component: {fileID: 1506437646}
   - component: {fileID: 1506437649}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4428,7 +4459,7 @@ GameObject:
   - component: {fileID: 1612886187}
   - component: {fileID: 1612886185}
   - component: {fileID: 1612886188}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4495,7 +4526,7 @@ GameObject:
   - component: {fileID: 1620393556}
   - component: {fileID: 1620393554}
   - component: {fileID: 1620393557}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4657,7 +4688,7 @@ GameObject:
   - component: {fileID: 1665532901}
   - component: {fileID: 1665532899}
   - component: {fileID: 1665532898}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (19)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6070,7 +6101,7 @@ GameObject:
   - component: {fileID: 2033698382}
   - component: {fileID: 2033698380}
   - component: {fileID: 2033698383}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6137,7 +6168,7 @@ GameObject:
   - component: {fileID: 2058221197}
   - component: {fileID: 2058221195}
   - component: {fileID: 2058221194}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (24)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6570,7 +6601,7 @@ GameObject:
   - component: {fileID: 2115776080}
   - component: {fileID: 2115776078}
   - component: {fileID: 2115776081}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SpawnLane1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

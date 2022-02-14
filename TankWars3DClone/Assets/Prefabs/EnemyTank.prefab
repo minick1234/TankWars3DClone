@@ -15,6 +15,22 @@ PrefabInstance:
       propertyPath: m_Color.g
       value: 0.8392157
       objectReference: {fileID: 0}
+    - target: {fileID: 130122584, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Size.x
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 130122584, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Size.z
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 130122584, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Center.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 362895587, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2008704220, guid: e4e09839311106846bebf26988acacdd, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -74,6 +90,14 @@ PrefabInstance:
     - target: {fileID: 2899505064361702527, guid: e4e09839311106846bebf26988acacdd, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994641, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2899505064361994641, guid: e4e09839311106846bebf26988acacdd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2899505064361994649, guid: e4e09839311106846bebf26988acacdd, type: 3}
       propertyPath: m_RootOrder
@@ -166,19 +190,20 @@ MonoBehaviour:
   xAxis: 0
   zAxis: 0
   gm: {fileID: 0}
-  RecheckMovementTime: 0.07
-  RecheckCollisionTime: 0.75
+  RecheckMovementTime: 0.1
+  RecheckCollisionTime: 0.5
+  RecheckSameLocationTime: 0.75
   tankRenders: {fileID: 6931490071130689780}
-  TankSpeed: 5
+  TankSpeed: 4
   BulletSpeed: 40
   TankHealth: 3
   tankExplosionEffect: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
-  TankTurretRotationSpeed: 120
+  TankTurretRotationSpeed: 100
   tanksRigidBody: {fileID: 6931490071130789783}
   rayCastMaxDistance: 1.64
   raycastOffset: 1.36
   turretObject: {fileID: 6931490071130689776}
-  rateOfFire: 0
+  rateOfFire: 1.5
   TankMissle: {fileID: 4039869506847297276, guid: c9c2d9b2f1d065a48b13163b23a2c447, type: 3}
   MissleSpawnPoint: {fileID: 3652866352619638192}
-  VisualizeMovementRays: 1
+  VisualizeMovementRays: 0

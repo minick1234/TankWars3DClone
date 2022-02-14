@@ -119,8 +119,8 @@ public class GameManager : MonoBehaviour
             if (SpawnLanes[randomSpawnLaneIndex].GetComponent<SpawnLane>().IsXLane)
             {
                 float boundingBoxRange = Random.Range(
-                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.min.x + 1f,
-                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.max.x - 1f);
+                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.min.x + 1.5f,
+                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.max.x - 1.5f);
 
                 Spawn = new Vector3(boundingBoxRange,
                     0.1f, SpawnLanes[randomSpawnLaneIndex].transform.position.z);
@@ -128,8 +128,8 @@ public class GameManager : MonoBehaviour
             else
             {
                 float boundingBoxRange = Random.Range(
-                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.min.z + 1f,
-                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.max.z - 1f);
+                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.min.z + 1.5f,
+                    SpawnLanes[randomSpawnLaneIndex].GetComponent<BoxCollider>().bounds.max.z - 1.5f);
 
                 Spawn = new Vector3(SpawnLanes[randomSpawnLaneIndex].transform.position.x,
                     0.1f, boundingBoxRange);
@@ -227,7 +227,6 @@ public class GameManager : MonoBehaviour
                             180,
                             0);
                     Startz = -1;
-
                 }
             }
             else
@@ -255,12 +254,13 @@ public class GameManager : MonoBehaviour
                             -SpawnLanes[randomSpawnLaneIndex].transform.eulerAngles.y,
                             0);
                     Startx = -1;
-
                 }
             }
+
             spawnedObject.GetComponent<EnemyTankController>().xAxis = Startx;
             spawnedObject.GetComponent<EnemyTankController>().zAxis = Startz;
         }
+
         return spawnedObject;
     }
 
