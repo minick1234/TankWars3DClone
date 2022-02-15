@@ -95,10 +95,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool CheckValidLocation(Vector3 positionOfObject)
-    {
-        return true;
-    }
 
     public void KillEnemy(GameObject enemyToRemove)
     {
@@ -112,8 +108,7 @@ public class GameManager : MonoBehaviour
     public Vector3 GenerateNewPosition()
     {
         Vector3 Spawn;
-        do
-        {
+
             randomSpawnLaneIndex = Random.Range(0, SpawnLanes.Count - 1);
 
             if (SpawnLanes[randomSpawnLaneIndex].GetComponent<SpawnLane>().IsXLane)
@@ -134,8 +129,7 @@ public class GameManager : MonoBehaviour
                 Spawn = new Vector3(SpawnLanes[randomSpawnLaneIndex].transform.position.x,
                     0.1f, boundingBoxRange);
             }
-        } while (!CheckValidLocation(Spawn));
-
+  
         return Spawn;
     }
 
